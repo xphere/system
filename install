@@ -17,15 +17,31 @@ function log() {
 }
 
 function update() {
-    pushd "$1" > /dev/null
     log Updating...
+
+    pushd "$1" > /dev/null
+
+    # if [ detect dirty work tree ]; then
+    #    log - Work tree is dirty, stashing
+    #    git stash > /dev/null 2>&1
+    # fi
 
     if [ master != "$(git rev-parse --abbrev-ref HEAD)" ]; then
         log - HEAD is not "master"
+        # git checkout master > /dev/null 2>&1
     fi
-#    git stash
-#    git pull origin master 1> /dev/null 2>&1
-#    git status -sb
+
+    # log - Pull from origin/master
+    # git pull origin master 1> /dev/null 2>&1
+
+    # if [ previous branch wasnt master ]; then
+    #     git checkout previous_branch > /dev/null 2>&1
+    # fi
+
+    # if [ work tree was dirty ]; then
+    #     git stash pop > /dev/null 2>&1
+    # fi
+
     popd > /dev/null
 }
 
