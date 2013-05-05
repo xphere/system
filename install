@@ -1,11 +1,19 @@
 #!/usr/bin/env bash
 
-function log() {
-	builtin echo $@
+function usage() {
+	cat << EOF
+usage: $0 options
+
+This script installs dotfiles in your user directory
+
+OPTIONS:
+-h Show this message
+-q Quiet
+EOF
 }
 
 function log() {
-	return
+	builtin echo $@
 }
 
 function update() {
@@ -51,6 +59,20 @@ function install() {
 		done
 	fi
 }
+
+while getopts "hq" OPTION
+do
+	case $OPTION in
+		h)	usage
+			exit 1
+			;;
+		q)	function log() {
+				# Overload function so no extra info will be echoed
+				return
+			}
+			;;
+	esac
+done
 
 FROM=$(dirname "$BASH_SOURCE")
 TO=~/
