@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function usage() {
-	cat << EOF
+    cat << EOF
 usage: $0 options
 
 This script installs dotfiles in your user directory
@@ -13,65 +13,65 @@ EOF
 }
 
 function log() {
-	builtin echo $@
+    builtin echo $@
 }
 
 function update() {
-	pushd "$1" > /dev/null
-	log Updating...
+    pushd "$1" > /dev/null
+    log Updating...
 
-	if [ master != "$(git rev-parse --abbrev-ref HEAD)" ]; then
-		log - HEAD is not "master"
-	fi
-#	git stash
-#	git pull origin master 1> /dev/null 2>&1
-#	git status -sb
-	popd > /dev/null
+    if [ master != "$(git rev-parse --abbrev-ref HEAD)" ]; then
+        log - HEAD is not "master"
+    fi
+#    git stash
+#    git pull origin master 1> /dev/null 2>&1
+#    git status -sb
+    popd > /dev/null
 }
 
 function locate() {
-	local SOURCE="$1"
-	local TARGET
+    local SOURCE="$1"
+    local TARGET
 
-	while [ -h "$SOURCE" ]; do
-		TARGET="$(readlink "$SOURCE")"
-		if [[ $SOURCE == /* ]]; then
-			SOURCE="$TARGET"
-		else
-		    SOURCE="$(dirname "$SOURCE")/$TARGET"
-	    fi
-	done
+    while [ -h "$SOURCE" ]; do
+        TARGET="$(readlink "$SOURCE")"
+        if [[ $SOURCE == /* ]]; then
+            SOURCE="$TARGET"
+        else
+            SOURCE="$(dirname "$SOURCE")/$TARGET"
+        fi
+    done
 
-	echo $SOURCE
+    echo $SOURCE
 }
 
 function install() {
-	log Installing...
-	if [ -d "$1/install.d" ]; then
-		for FILE in $1/install.d/*.sh; do
-			if [ -r "$FILE" ]; then
-				log - Module $(basename "$FILE")
-				if [ -h "$FILE" ]; then
-					FILE=$(locate "$FILE")
-				fi
-				. "$FILE" "$(cd "$(dirname "$FILE")" && pwd)" $2
-			fi
-		done
-	fi
+    log Installing...
+    if [ -d "$1/install.d" ]; then
+        for FILE in $1/install.d/*.sh; do
+            if [ -r "$FILE" ]; then
+                log - Module $(basename "$FILE")
+                if [ -h "$FILE" ]; then
+                    FILE=$(locate "$FILE")
+                fi
+                . "$FILE" "$(cd "$(dirname "$FILE")" && pwd)" $2
+            fi
+        done
+    fi
 }
 
 while getopts "hq" OPTION
 do
-	case $OPTION in
-		h)	usage
-			exit 1
-			;;
-		q)	function log() {
-				# Overload function so no extra info will be echoed
-				return
-			}
-			;;
-	esac
+    case $OPTION in
+        h)    usage
+            exit 1
+            ;;
+        q)    function log() {
+                # Overload function so no extra info will be echoed
+                return
+            }
+            ;;
+    esac
 done
 
 FROM=$(dirname "$BASH_SOURCE")
