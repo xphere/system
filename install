@@ -74,7 +74,12 @@ do
     esac
 done
 
-FROM=$(dirname "$BASH_SOURCE")
+SOURCE=$(dirname "$BASH_SOURCE")
+if [ -f "$SOURCE/install.conf" ]; then
+  source "$SOURCE/install.conf"
+fi
+
+FROM=$SOURCE
 TO=~/
 
 update "$FROM"

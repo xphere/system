@@ -1,0 +1,4 @@
+# Copy this script to install.conf and modify the parameters as you wish
+
+NAME="Firstname Surname"
+EMAIL="username@domain.tld"
