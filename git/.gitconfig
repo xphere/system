@@ -19,7 +19,7 @@ changed = green
 untracked = cyan
 
 [alias]
-st      = status
+st      = status -sb
 ci      = commit
 br      = branch
 co      = checkout
@@ -50,6 +50,9 @@ excludesfile = ~/.gitignore
 [http] 
 postBuffer = 524288000 
 receivepack = true
+
+[diff]
+algorithm = patience
 
 [user]
 name=Username
