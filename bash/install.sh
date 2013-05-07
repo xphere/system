@@ -6,4 +6,5 @@ SOURCE=$(dirname "$BASH_SOURCE")/
 INSTALLER=$(basename "$BASH_SOURCE")
 
 # Copy all files from this directory to destination, except this script
-rsync --exclude "$INSTALLER" -a --no-perms "$SOURCE" "$DESTINATION"
+copy_files "$SOURCE" "$DESTINATION" "$INSTALLER"
+

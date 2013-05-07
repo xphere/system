@@ -61,6 +61,10 @@ function locate() {
     echo $SOURCE
 }
 
+function copy_files() {
+    rsync -a --no-perms "$1" "$2"${3:+ --exclude="$3"}
+}
+
 function install() {
     log Installing...
     if [ -d "$1/install.d" ]; then
