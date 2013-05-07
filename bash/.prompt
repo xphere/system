@@ -1,0 +1,10 @@
+# show git current branch
+function parse_git_branch() {
+    git curr 2>/dev/null | sed "s/.*/ [\0]/"
+}
+
+# set a fancy prompt
+case "$TERM" in
+    *-color) PS1='\[\e[1;32m\]:\w\[\e[m\]\[\e[1;35m\]$(parse_git_branch)\[\e[m\]\$ ';;
+    *) PS1=':\w$(parse_git_branch)\$ ';;
+esac

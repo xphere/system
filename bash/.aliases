@@ -1,0 +1,18 @@
+# sudo now can be used with alias
+alias sudo='sudo '
+
+# easier navigation
+alias ..='cd..'
+
+# color in file list
+alias ls='ls --color'
+alias ll='ls -laF'
+alias la='ls -A'
+alias l='ls -CF'
+
+# map function
+alias map='xargs -n1'
+
+# add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'

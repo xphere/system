@@ -1,0 +1,16 @@
+# append to the history file, don't overwrite it
+shopt -s histappend 2> /dev/null
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize 2> /dev/null
+
+# case-insensitive globbing in pathname
+shopt -s nocaseglob 2> /dev/null
+
+# autocorrect typos in path names when using `cd`
+shopt -s cdspell 2> /dev/null
+
+# allows recursive globbing expansion for folders and files
+shopt -s autocd 2> /dev/null
+shopt -s globstar 2> /dev/null

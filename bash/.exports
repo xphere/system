@@ -1,0 +1,22 @@
+# make vim the default editor
+export EDITOR="vim"
+
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+HISTSIZE=4096
+HISTFILESIZE=4096
+
+# don't put duplicate lines in the history. See bash(1) for more options
+# ... or force ignoredups and ignorespace
+HISTCONTROL=ignoredups:ignorespace
+
+# hide some commands from history
+export HISTIGNORE="ls:cd:cd -:pwd:exit:date:* --help"
+
+# highlight section titles in manual pages
+export LESS_TERMCAP_md="$ORANGE"
+
+# don’t clear the screen after quitting a manual page
+export MANPAGER="less -X"
+
+# always enable colored `grep` output
+export GREP_OPTIONS="--color=auto"

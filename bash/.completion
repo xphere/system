@@ -1,0 +1,2 @@
+# enable programmable completion features
+[ -r /etc/bash_completion ] && ! shopt -oq posix && source /etc/bash_completion
