@@ -1,5 +1,5 @@
 # set PATH so it includes user's private bin if it exists
-[ -d "~/bin" ] && export PATH="~/bin:$PATH"
+[ -d "~/bin" -a -r "~/bin" ] && [[ ":$PATH:" != *":~/bin:"* ]] && export PATH="~/bin:$PATH"
 
 # Also export /var/www/bin
-[ -d "/var/www/bin" ] && [ -r "/var/www/bin" ] && export PATH="$PATH:/var/www/bin"
+[ -d "/var/www/bin" -a -r "/var/www/bin" ] && [[ ":$PATH:" != *":/var/www/bin:"* ]] && export PATH="$PATH:/var/www/bin"
