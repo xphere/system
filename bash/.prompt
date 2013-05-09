@@ -8,3 +8,5 @@ case "$TERM" in
     *-color) PS1='\[\e[1;32m\]:\w\[\e[m\]\[\e[1;35m\]$(parse_git_branch)\[\e[m\]\$ ';;
     *) PS1=':\w$(parse_git_branch)\$ ';;
 esac
+
+# TO DO: separate in two

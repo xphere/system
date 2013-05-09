@@ -1,5 +1,13 @@
+prepend_path() {
+    [ -d "$1" -a -r "$1" ] && [[ ":$PATH:" != *":$1:"* ]] && export PATH="$1:$PATH"
+}
+
+append_path() {
+    [ -d "$1" -a -r "$1" ] && [[ ":$PATH:" != *":$1:"* ]] && export PATH="$PATH:$1"
+}
+
 # set PATH so it includes user's private bin if it exists
-[ -d "~/bin" -a -r "~/bin" ] && [[ ":$PATH:" != *":~/bin:"* ]] && export PATH="~/bin:$PATH"
+prepend_path "~/bin"
 
 # Also export /var/www/bin
-[ -d "/var/www/bin" -a -r "/var/www/bin" ] && [[ ":$PATH:" != *":/var/www/bin:"* ]] && export PATH="$PATH:/var/www/bin"
+append_path "/var/www/bin"
