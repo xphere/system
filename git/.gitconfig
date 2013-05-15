@@ -57,6 +57,17 @@ algorithm = patience
 [branch "master"]
 mergeoptions = --ff-only
 
+[gitflow "branch"]
+master = master
+develop = develop
+
+[gitflow "prefix"]
+feature = "feat#"
+release = "deploy#"
+hotfix = "bug#"
+support = "support#"
+versiontag =
+
 [user]
 name=Username
 email=username@subdomain.domain.tld
