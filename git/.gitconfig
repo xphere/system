@@ -54,6 +54,9 @@ receivepack = true
 [diff]
 algorithm = patience
 
+[branch "master"]
+mergeoptions = --ff-only
+
 [user]
 name=Username
 email=username@subdomain.domain.tld
