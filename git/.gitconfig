@@ -1,5 +1,5 @@
 [color]
-ui=auto
+ui = auto
 
 [color "branch"]
 current = yellow reverse 
@@ -42,9 +42,9 @@ ignore  = !([ ! -e .gitignore ] && touch .gitignore) | echo $1 >>.gitignore
 exec    = "!exec "
 
 [core]
-filemode=true
-lagallrefupdates=true
-whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
+filemode = true
+lagallrefupdates = true
+whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
 excludesfile = ~/.gitignore
 
 [http] 
@@ -69,5 +69,5 @@ support = "support#"
 versiontag =
 
 [user]
-name=Username
-email=username@subdomain.domain.tld
+name = Username
+email = username@subdomain.domain.tld
