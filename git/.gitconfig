@@ -27,6 +27,7 @@ df      = diff
 ds      = diff --staged
 dc      = diff --cached
 lg      = log -p
+search  = log -S
 lol     = log --graph --decorate --pretty=oneline --abbrev-commit
 lola    = log --graph --decorate --pretty=oneline --abbrev-commit --all
 ls      = ls-files
