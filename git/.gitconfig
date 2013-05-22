@@ -57,6 +57,9 @@ receivepack = true
 [diff]
 algorithm = patience
 
+[push]
+default = simple
+
 [branch "master"]
 mergeoptions = --ff-only
 
