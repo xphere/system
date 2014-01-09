@@ -30,8 +30,8 @@ dc      = diff --cached
 l       = log -1
 lg      = log -p
 search  = log -S
-lol     = log --graph --decorate --pretty=oneline --abbrev-commit
-lola    = log --graph --decorate --pretty=oneline --abbrev-commit --all
+lol     = log --graph --pretty=custom
+lola    = log --graph --pretty=custom --all
 ls      = ls-files
 unstage = reset HEAD
 ign     = ls-files -o -i --exclude-standard
@@ -43,6 +43,9 @@ desc    = !git config --get branch.$(git curr).description
 alias   = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\\t => \\2/' | sort
 ignore  = !([ ! -e .gitignore ] && touch .gitignore) | echo $1 >>.gitignore
 exec    = "!exec "
+
+[pretty]
+custom = %C(auto)%h%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset
 
 [core]
 filemode = true
