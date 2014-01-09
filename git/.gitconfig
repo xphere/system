@@ -19,13 +19,15 @@ changed = green
 untracked = cyan
 
 [alias]
-st      = status -sb
+st      = status -sbu
 ci      = commit
 br      = branch
 co      = checkout
+cb      = checkout --conflict=merge
 df      = diff
 ds      = diff --staged
 dc      = diff --cached
+l       = log -1
 lg      = log -p
 search  = log -S
 lol     = log --graph --decorate --pretty=oneline --abbrev-commit
@@ -55,24 +57,10 @@ postBuffer = 524288000
 receivepack = true
 
 [diff]
-algorithm = patience
+algorithm = histogram
 
 [push]
 default = simple
-
-[branch "master"]
-mergeoptions = --ff-only
-
-[gitflow "branch"]
-master = master
-develop = develop
-
-[gitflow "prefix"]
-feature = "feat#"
-release = "deploy#"
-hotfix = "bug#"
-support = "support#"
-versiontag =
 
 [user]
 name = Username
