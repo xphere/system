@@ -5,7 +5,7 @@ skip=1
 errors=()
 while read -r -d $'\0'; do
     skip=0
-    error=$(php -l "$REPLY" 2>&1 >/dev/null)
+    error=$(php -l "$REPLY" -ddisplay_errors=1 -derror_reporting=E_ALL -dlog_errrors=0 2>&1 >/dev/null)
     if [ -n "$error" ]; then
         errors+=($error);
     fi
