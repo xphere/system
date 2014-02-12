@@ -7,9 +7,14 @@ if [ -z "$config" ]; then
     exit 0
 fi
 
-RESULT=$(phpunit -c $(dirname "${config}") --stop-on-error --stop-on-failure)
+RESULT=$(phpunit -c $(dirname "${config}") --stop-on-error --stop-on-failure 2>&1)
 if [ $? -ne 0 ]; then
-    hook_ko $(echo "${RESULT}"|grep -oP '(?<=^There was )[1-9][0-9]*+(?= failure)') failing tests
+    if echo "${RESULT}"|grep -q 'PHP Fatal error'; then
+        INFO="Fatal error"
+    else
+        INFO="$(echo "${RESULT}"|grep -oP '(?<=^There was )[1-9][0-9]*+(?= failure)') failing tests"
+    fi
+    hook_ko "${INFO}"
     echo "${RESULT}"
     exit 1
 fi
