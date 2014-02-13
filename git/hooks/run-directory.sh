@@ -1,8 +1,9 @@
-#!/bin/bash
+#!/bin/bash -x
 
 DIR=$(dirname "$0")
 SCRIPT=$(basename "$0")
-for FILE in ${DIR}/${SCRIPT}.d/*; do
+FILES=${DIR}/${SCRIPT}.d/*
+for FILE in "${FILES}"; do
   ${FILE} $@ || exit $?
 done
 
