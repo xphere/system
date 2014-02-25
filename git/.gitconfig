@@ -43,6 +43,7 @@ desc    = !git config --get branch.$(git curr).description
 alias   = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\\t => \\2/' | sort
 ignore  = !([ ! -e .gitignore ] && touch .gitignore) | echo $1 >>.gitignore
 exec    = "!exec "
+replay  = "!f() { HEAD=\"${2:-HEAD}\"; git rebase \"$(git merge-base \"$HEAD\" \"$1\")\" \"$1\" --onto \"$HEAD\"; }; f"
 
 [pretty]
 custom = %C(auto)%h%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset
