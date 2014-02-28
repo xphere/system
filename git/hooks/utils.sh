@@ -3,8 +3,8 @@
 if [[ -t 1 && "$(tput colors)" -ge 8 ]]; then
     hook_title() { echo -en "\e[0;36m$@\e[0m — "; }
     hook_ok() { [ $# -ne 0 ] && echo -e "\e[0;32mOK \e[0;1;90m($@)\e[0m" || echo -e "\e[0;32mOK\e[0m"; }
-    hook_ko() { [ $# -ne 0 ] && echo -e "\e[0;1;31mKO\e[0m \e[0;31m($@)\e[0m" || echo "\e[0;1;31mKO\e[0m"; }
-    hook_skip() { [ $# -ne 0 ] && echo -e "\e[0mskip \e[0;1;90m($@)\e[0m" || echo "\e[0;90mskip\e[0m"; }
+    hook_ko() { [ $# -ne 0 ] && echo -e "\e[0;1;31mKO\e[0m \e[0;31m($@)\e[0m" || echo -e "\e[0;1;31mKO\e[0m"; }
+    hook_skip() { [ $# -ne 0 ] && echo -e "\e[0mskip \e[0;1;90m($@)\e[0m" || echo -e "\e[0;90mskip\e[0m"; }
     hook_details() { while read -r line; do echo -e "\e[0m    - ${line}"; done <<< "$@"; }
     hook_info() { echo -e "\e[0;1;44m[*]\e[0;34m $@\e[0m"; }
     hook_warn() { echo -e "\e[0;1;30;43m[*]\e[0;33m $@\e[0m"; }
