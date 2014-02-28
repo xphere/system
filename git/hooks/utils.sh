@@ -35,11 +35,15 @@ function git_against {
     git rev-parse --verify ${1:-HEAD} || echo 4b825dc642cb6eb9a060e54bf8d69288fbee4904
 }
 
+function git_diff {
+    git diff --cached --name-only --diff-filter=ACMR --exit-code $@
+}
+
 function git_changed_files {
     local files=()
     while read -r -d $'\0'; do
         files+=("$REPLY")
-    done < <(git diff -z --cached --name-only --diff-filter=ACMR $@)
+    done < <(git_diff -z -- $@)
 
     echo "${files[@]}"
 }
@@ -56,4 +60,4 @@ function git_unstash {
     git cat-file -p 'stash@{0}'|grep -q ${1:-git-temp-hook-stash} && git reset -q --hard && git stash pop -q --index
 }
 
-export -f git_changed_files
+export -f git_diff git_changed_files

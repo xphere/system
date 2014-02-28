@@ -1,6 +1,10 @@
 #!/bin/bash
 . $(dirname $0)/utils.sh
 
+if git_diff; then
+    exit
+fi >/dev/null 2>&1;
+
 git_need_stash
 STASHED=$?
 if [ ${STASHED} -ne 0 ]; then
