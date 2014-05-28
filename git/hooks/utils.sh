@@ -23,11 +23,13 @@ fi
 export -f hook_title hook_ok hook_ko hook_skip hook_details hook_info hook_warn hook_error
 
 function hooks_run {
-    local DIR=$(dirname "$0")
-    local SCRIPT=$(basename "$0")
+    local DIR="$(dirname "$0")"
+    local SCRIPT="$(basename "$0")"
 
-    for FILE in ${DIR}/${SCRIPT}.d/*; do
-        ${FILE} $@ || return $?
+    for FILE in "$DIR/${SCRIPT}.d/*"; do
+        if [[ -x "$FILE" ]]; then
+            "$FILE" $@ || return $?
+        fi
     done
 }
 
