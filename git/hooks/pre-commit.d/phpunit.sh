@@ -1,7 +1,7 @@
 #!/bin/bash
 hook_title PHPUnit
 
-config=$(find -iname 'phpunit.xml*' | sort | head -1)
+config=$(find -maxdepth 2 -iname 'phpunit.xml*' | sort | head -1)
 if [ -z "$config" ]; then
     hook_skip no PHPUnit configuration file found
     exit 0
