@@ -66,6 +66,9 @@ algorithm = histogram
 [push]
 default = simple
 
+[rerere]
+enabled = true
+
 [user]
 name = Username
 email = username@subdomain.domain.tld
