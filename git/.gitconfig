@@ -19,32 +19,47 @@ changed = green
 untracked = cyan
 
 [alias]
+b   = branch
+c   = checkout
+cb  = checkout --conflict=merge
+ci  = commit
+cm  = commit -m
+cn  = checkout --track -b
+cp  = cherry-pick
+d   = diff
+dn  = diff --name-only
+ds  = diff --staged
+dsn = diff --staged --name-only
+l   = log --graph --pretty=line @{u}..
+l1  = log -1
+la  = log --graph --pretty=line --all
+lg  = log -p
+ll  = log --graph --pretty=line
+lv  = log --graph --pretty=line @{u}^2..
+nb  = checkout -tb
+p   = add -p
+pr  = pull --rebase
+rh  = reset --hard
+ri  = rebase --interactive
+s   = status -sbu
+si  = status -sbu --ignored
+up  = push -f
+x   = "!exec "
+
 alias     = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\ = \\2/' | sort
 amend     = commit --amend --no-edit
-br        = branch
-cb        = checkout --conflict=merge
-ci        = commit
-co        = checkout
 current   = rev-parse --abbrev-ref HEAD
-d         = diff
 discard   = !git reset --hard && git clean -df
-ds        = diff --staged
+down      = pull --ff-only --no-tags
 exec      = "!exec "
 fixup     = commit --fixup
 ign       = ls-files -o -i --exclude-standard
-ignore    = !([ ! -e .gitignore ] && touch .gitignore) | echo $1 >>.gitignore
-l         = log -1
-lg        = log -p
-ll        = log --graph --pretty=line @{u}^..
-lol       = log --graph --pretty=line
-lola      = log --graph --pretty=line --all
-ls        = ls-files
-patch     = add -p
+ignore    = !([ -e .gitignore ] || touch .gitignore) && echo "$@" >> .gitignore
 prune     = !git reflog expire --expire=now --all && git gc --prune=now
 root      = rev-parse --show-toplevel
 search    = log -S
-st        = status -sbu
 tmpbranch = !git checkout -b "tmp-$(date -Ins | md5sum | cut -b-8)"
+unmerged  = !git for-each-ref -s --format '%(refname:short)' refs/heads/ | xargs git merge-base --independent master | xargs git name-rev --name-only
 
 [pretty]
 line = %C(auto)%h%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset
@@ -53,7 +68,7 @@ line = %C(auto)%h%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset
 filemode = true
 lagallrefupdates = true
 whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
-excludesfile = ~/.gitignore
+excludesfile = ~/.gitexclude
 autocrlf = input
 safecrlf = true
 
@@ -68,8 +83,14 @@ mnemonicprefix = true
 [push]
 default = simple
 
+[merge]
+tool = meld
+
 [mergetool]
 prompt = false
+
+[mergetool "meld"]
+keepbackup = false
 
 [rebase]
 autosquash = true
