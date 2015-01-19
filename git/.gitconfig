@@ -1,25 +1,6 @@
-[color]
-ui = auto
-
-[color "branch"] 
-current = yellow reverse 
-local = yellow 
-remote = green
-
-[color "diff"] 
-meta = yellow bold 
-frag = magenta bold 
-old = red bold 
-new = green bold
-whitespace = red reverse
-
-[color "status"] 
-added = yellow 
-changed = green 
-untracked = cyan
-
 [alias]
 b   = branch
+br  = branch -r
 c   = checkout
 cb  = checkout --conflict=merge
 ci  = commit
@@ -27,9 +8,12 @@ cm  = commit -m
 cn  = checkout --track -b
 cp  = cherry-pick
 d   = diff
+df  = !git log --format="%h" -- $(git dsn)
 dn  = diff --name-only
 ds  = diff --staged
 dsn = diff --staged --name-only
+du  = ls-files -o --exclude-standard
+is  = ![ -d .git ] || git rev-parse --git-dir > /dev/null 2>&1
 l   = log --graph --pretty=line @{u}..
 l1  = log -1
 la  = log --graph --pretty=line --all
@@ -39,64 +23,89 @@ lv  = log --graph --pretty=line @{u}^2..
 nb  = checkout -tb
 p   = add -p
 pr  = pull --rebase
+r   = reset
+rc  = rebase --continue
 rh  = reset --hard
 ri  = rebase --interactive
 s   = status -sbu
 si  = status -sbu --ignored
 up  = push -f
 x   = "!exec "
+z   = "!f() { git r -- $@ && git c -- $@; }; f"
 
 alias     = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\ = \\2/' | sort
 amend     = commit --amend --no-edit
 current   = rev-parse --abbrev-ref HEAD
 discard   = !git reset --hard && git clean -df
-down      = pull --ff-only --no-tags
+down      = pull --no-tags
 exec      = "!exec "
 fixup     = commit --fixup
 ign       = ls-files -o -i --exclude-standard
 ignore    = !([ -e .gitignore ] || touch .gitignore) && echo "$@" >> .gitignore
 prune     = !git reflog expire --expire=now --all && git gc --prune=now
+refresh   = !git store && git c @{u} && git down && git c @{-1} && git rebase && git recover
 root      = rev-parse --show-toplevel
 search    = log -S
 tmpbranch = !git checkout -b "tmp-$(date -Ins | md5sum | cut -b-8)"
 unmerged  = !git for-each-ref -s --format '%(refname:short)' refs/heads/ | xargs git merge-base --independent master | xargs git name-rev --name-only
 
-[pretty]
-line = %C(auto)%h%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset
+[branch]
+autosetupmerge = always
+
+[color]
+ui = auto
+
+[color "branch"] 
+current = yellow reverse 
+local = yellow 
+remote = green
+
+[color "diff"] 
+frag = magenta bold 
+meta = yellow bold 
+new = green bold
+old = red bold 
+whitespace = red reverse
+
+[color "status"] 
+added = yellow 
+changed = green 
+untracked = cyan
 
 [core]
+autocrlf = input
+excludesfile = ~/.gitexclude
 filemode = true
 lagallrefupdates = true
-whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
-excludesfile = ~/.gitexclude
-autocrlf = input
 safecrlf = true
-
-[http] 
-postBuffer = 524288000 
-receivepack = true
+whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
 
 [diff]
 algorithm = myers
 mnemonicprefix = true
 
-[push]
-default = simple
+[http] 
+postBuffer = 524288000 
+receivepack = true
 
 [merge]
 tool = meld
 
 [mergetool]
 prompt = false
+keepBackup = false
 
 [mergetool "meld"]
 keepbackup = false
 
+[pretty]
+line = %C(auto)%h%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset
+
+[push]
+default = simple
+
 [rebase]
 autosquash = true
-
-[branch]
-autosetupmerge = always
 
 [rerere]
 enabled = true
