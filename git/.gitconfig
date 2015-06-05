@@ -1,5 +1,6 @@
 [alias]
 b   = branch
+bl  = for-each-ref -s --format '%(refname:short)' refs/heads/
 br  = branch -r
 c   = checkout
 cb  = checkout --conflict=merge
@@ -8,7 +9,7 @@ cm  = commit -m
 cn  = checkout --track -b
 cp  = cherry-pick
 d   = diff
-df  = !git log --format="%h" -- $(git dsn)
+df  = !git log --format="%h" @{u}.. -- $(git dsn)
 dn  = diff --name-only
 ds  = diff --staged
 dsn = diff --staged --name-only
@@ -19,8 +20,9 @@ l1  = log -1
 la  = log --graph --pretty=line --all
 lg  = log -p
 ll  = log --graph --pretty=line
-lv  = log --graph --pretty=line @{u}^2..
-nb  = checkout -tb
+lv  = log --graph --pretty=line @{u}~~..
+mb  = "!f() { git update-ref \"refs/heads/$1\" \"${2-HEAD}\"; }; f"
+nb  = "!f() { git checkout -tb \"$1\" \"${2-'@{u\\}'}\"; }; f"
 p   = add -p
 pr  = pull --rebase
 r   = reset
@@ -29,11 +31,15 @@ rh  = reset --hard
 ri  = rebase --interactive
 s   = status -sbu
 si  = status -sbu --ignored
-up  = push -f
+sp  = status --porcelain
+tr  = "!f() { local BRANCH=${1:-$(git current)}; git config --get \"branch.$BRANCH.remote\"; }; f"
+u   = checkout @{u}
+up  = "!f() { local BRANCH=${1:-$(git current)}; local REMOTE=${2:-$(git tr \"$BRANCH\")}; git push \"$REMOTE\" \"$BRANCH\"; }; f"
+uf  = "!f() { local BRANCH=${1:-$(git current)}; local REMOTE=${2:-$(git tr \"$BRANCH\")}; git push -f \"$REMOTE\" \"$BRANCH\"; }; f"
 x   = "!exec "
-z   = "!f() { git r -- $@ && git c -- $@; }; f"
+z   = "!f() { git r $@ && git c $@; }; f"
 
-alias     = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\ = \\2/' | sort
+alias     = !git config --get-regexp 'alias.*' | colrm 1 6 | sed 's/[ ]/ = /' | sort
 amend     = commit --amend --no-edit
 current   = rev-parse --abbrev-ref HEAD
 discard   = !git reset --hard && git clean -df
@@ -46,8 +52,11 @@ prune     = !git reflog expire --expire=now --all && git gc --prune=now
 refresh   = !git store && git c @{u} && git down && git c @{-1} && git rebase && git recover
 root      = rev-parse --show-toplevel
 search    = log -S
-tmpbranch = !git checkout -b "tmp-$(date -Ins | md5sum | cut -b-8)"
-unmerged  = !git for-each-ref -s --format '%(refname:short)' refs/heads/ | xargs git merge-base --independent master | xargs git name-rev --name-only
+stale     = "!f() { for branch in $(git unmerged); do (git rev-parse --verify --quiet \"$branch\"@{u} > /dev/null 2>&1 && git merge-base --is-ancestor \"$branch\"@{u} \"$branch\") || echo \"$branch\"; done }; f"
+tmpbranch = !git checkout -b "${1-tmp-}$(date -Ins | md5sum | cut -b-8)"
+tracked   = rev-parse --abbrev-ref @{u}
+unchanged = update-index --assume-unchanged
+unmerged  = "!f() { git bl | xargs git merge-base --independent ${1:-} | xargs git name-rev --name-only; }; f"
 
 [branch]
 autosetupmerge = always
