@@ -6,3 +6,6 @@
 [ -r .shopt ]      && source .shopt
 [ -r .completion ] && source .completion
 [ -r .prompt ]     && source .prompt
+
+# include all extensions
+[ -r .profile.d ] && [ -z $(find .profile.d -prune -empty) ] && source .profile.d/*
