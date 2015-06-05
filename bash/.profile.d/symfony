@@ -1,0 +1,33 @@
+# Symfony extension for bash
+
+sf() {
+    local DIR
+
+    pushd . > /dev/null 2>&1
+    while ! git exec test -x app/console; do
+        if [ $PWD = "/" ]; then
+            popd > /dev/null 2>&1
+            echo "Can't find a suitable Symfony application" 1>&2
+            return 1
+        fi
+        DIR=$(git root 2> /dev/null)
+        if [[ $DIR ]]; then
+            cd "$DIR"
+        fi
+        cd ..
+    done
+
+    git exec app/console "$@"
+    EXITCODE=$?
+
+    popd > /dev/null 2>&1
+
+    if which notify-send > /dev/null 2>&1 && [[ -n "$@" ]] && ! [[ "$@" =~ "-h" ]]; then
+        MESSAGE=$([[ $EXITCODE = 0 ]] && echo "finished" || echo "failed with error $EXITCODE")
+        notify-send "Symfony Console" "$1 $MESSAGE"
+    fi
+
+    return "$EXITCODE"
+}
+
+export -f sf
