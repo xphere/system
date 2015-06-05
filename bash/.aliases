@@ -13,6 +13,13 @@ alias l='ls -CF'
 # map function
 alias map='xargs -n1'
 
+# git helpers
+alias root='git is && cd $(git root)'
+
+# composer helpers
+alias cu='composer update'
+alias cplu='composer update --prefer-dist --prefer-lowest'
+
 # add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
