@@ -9,7 +9,7 @@ cm  = commit -m
 cn  = checkout --track -b
 cp  = cherry-pick
 d   = diff
-df  = !git log --format="%h" @{u}.. -- $(git dsn)
+df  = !git log --format='%h %s' @{u}.. -- $(git dsn)
 dn  = diff --name-only
 ds  = diff --staged
 dsn = diff --staged --name-only
@@ -22,9 +22,10 @@ lg  = log -p
 ll  = log --graph --pretty=line
 lv  = log --graph --pretty=line @{u}~~..
 mb  = "!f() { git update-ref \"refs/heads/$1\" \"${2-HEAD}\"; }; f"
-nb  = "!f() { git checkout -tb \"$1\" \"${2-'@{u\\}'}\"; }; f"
+nb  = "!f() { git checkout -tb \"$1\" \"${2-$(git current)}\"; }; f"
+nbu = "!f() { git checkout -tb \"$1\" \"${2-@{u\\}}\"; }; f"
 p   = add -p
-pr  = pull --rebase
+pr  = pull --rebase --no-tags
 r   = reset
 rc  = rebase --continue
 rh  = reset --hard
@@ -32,10 +33,10 @@ ri  = rebase --interactive
 s   = status -sbu
 si  = status -sbu --ignored
 sp  = status --porcelain
-tr  = "!f() { local BRANCH=${1:-$(git current)}; git config --get \"branch.$BRANCH.remote\"; }; f"
+tr  = "!f() { local BRANCH=${1-$(git current)}; git config --get \"branch.$BRANCH.remote\"; }; f"
 u   = checkout @{u}
-up  = "!f() { local BRANCH=${1:-$(git current)}; local REMOTE=${2:-$(git tr \"$BRANCH\")}; git push \"$REMOTE\" \"$BRANCH\"; }; f"
-uf  = "!f() { local BRANCH=${1:-$(git current)}; local REMOTE=${2:-$(git tr \"$BRANCH\")}; git push -f \"$REMOTE\" \"$BRANCH\"; }; f"
+up  = "!f() { local BRANCH=${1-$(git current)}; local REMOTE=${2-$(git tr \"$BRANCH\")}; git push \"$REMOTE\" \"$BRANCH\"; }; f"
+uf  = "!f() { local BRANCH=${1-$(git current)}; local REMOTE=${2-$(git tr \"$BRANCH\")}; git push -f \"$REMOTE\" \"$BRANCH\"; }; f"
 x   = "!exec "
 z   = "!f() { git r $@ && git c $@; }; f"
 
@@ -43,11 +44,12 @@ alias     = !git config --get-regexp 'alias.*' | colrm 1 6 | sed 's/[ ]/ = /' | 
 amend     = commit --amend --no-edit
 current   = rev-parse --abbrev-ref HEAD
 discard   = !git reset --hard && git clean -df
-down      = pull --no-tags
+down      = "!f() { local BRANCH=${2-$(git current)}; local REMOTE=${1-$(git tr \"$BRANCH\")}; git pull --ff-only --no-tags \"$REMOTE\" \"$BRANCH\":\"$BRANCH\"; }; f"
 exec      = "!exec "
 fixup     = commit --fixup
 ign       = ls-files -o -i --exclude-standard
 ignore    = !([ -e .gitignore ] || touch .gitignore) && echo "$@" >> .gitignore
+last      = !git checkout @{-1}
 prune     = !git reflog expire --expire=now --all && git gc --prune=now
 refresh   = !git store && git c @{u} && git down && git c @{-1} && git rebase && git recover
 root      = rev-parse --show-toplevel
@@ -108,10 +110,13 @@ keepBackup = false
 keepbackup = false
 
 [pretty]
-line = %C(auto)%h%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset
+line = %C(auto)%h %s%d %C(blue)<%an>%C(green) %ar
 
 [push]
 default = simple
+
+[pull]
+rebase = true
 
 [rebase]
 autosquash = true

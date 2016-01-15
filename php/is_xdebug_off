@@ -1,0 +1,41 @@
+#!/bin/bash
+
+if [[ -n "$ALLOW_XDEBUG" ]]; then
+    exit 0
+fi
+
+QUIET=0
+while test $# -gt 0
+do
+    case "$1" in
+        --port) PORT="$2"; shift
+            ;;
+        --quiet|-q) QUIET=1
+            ;;
+        *) echo "Invalid argument $1"; exit 1
+            ;;
+    esac
+    shift
+done
+
+if [[ -z "$PORT" ]]; then
+    PORT=$(php -r 'echo ini_get("xdebug.remote_port");')
+fi
+
+if [[ -n "$PORT" ]]; then
+    lsof -ti:"$PORT" > /dev/null
+    if [[ $? -eq 0 ]]; then
+        if [[ $QUIET -eq 0 ]]; then
+            echo ""
+            echo " ⚠  WARNING ⚠"
+            echo ""
+            echo " Somebody's listening to XDEBUG port $PORT"
+            echo " Better stop it before running this command"
+            echo ""
+            echo " You may bypass this check setting ALLOW_XDEBUG"
+            echo ""
+        fi
+        exit 1
+    fi
+fi
+
