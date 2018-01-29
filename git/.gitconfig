@@ -15,7 +15,7 @@ ds  = diff --staged
 dsn = diff --staged --name-only
 du  = ls-files -o --exclude-standard
 f   = fetch --no-tags
-fr  = "!f() { local BRANCH=${1-$(git current)}; git fetch origin \"$BRANCH\" && git rebase \"${BRANCH}@{u}\" \"${BRANCH}\" --onto FETCH_HEAD; }; f"
+fr  = "!f() { local BRANCH=${1-$(git current)}; git f origin \"$BRANCH\" && git rebase $(git merge-base FETCH_HEAD \"${BRANCH}\") --onto FETCH_HEAD; }; f"
 is  = ![ -d .git ] || git rev-parse --git-dir > /dev/null 2>&1
 l   = log --graph --pretty=line @{u}..
 l1  = log -1
@@ -51,16 +51,18 @@ discard   = !git reset --hard && git clean -df
 down      = "!f() { local BRANCH=${2-$(git current)}; local REMOTE=${1-$(git tr \"$BRANCH\")}; git pull --ff-only --no-tags \"$REMOTE\" \"$BRANCH\":\"$BRANCH\"; }; f"
 exec      = "!exec "
 fixup     = commit --fixup
+git       = !exec git
 ign       = ls-files -o -i --exclude-standard
 ignore    = "!f() { [ -e .gitignore ] || touch .gitignore; echo \"$@\" >> .gitignore; }; f"
 last      = rev-parse --short HEAD
 lastco    = checkout @{-1}
 new       = add -N
+move-file = "!f() { [ -f \"$1\" ] || mv \"$2\" \"$1\"; git mv -fk \"$1\" \"$2\"; }; f"
 prune     = !git reflog expire --expire=now --all && git gc --prune=now
 refresh   = !git store && git c @{u} && git down && git c @{-1} && git rebase && git recover
 root      = rev-parse --show-toplevel
 search    = log -S
-stale     = "!f() { for branch in $(git unmerged); do (git rev-parse --verify --quiet \"$branch\"@{u} > /dev/null 2>&1 && git merge-base --is-ancestor \"$branch\"@{u} \"$branch\") || echo \"$branch\"; done }; f"
+stale     = "!f() { for BRANCH in $(git unmerged); do (git rev-parse --verify --quiet \"$BRANCH\"@{u} > /dev/null 2>&1 && git merge-base --is-ancestor \"$BRANCH\"@{u} \"$BRANCH\") || echo \"$BRANCH\"; done }; f"
 start     = !git init . && git commit --allow-empty -m 'Initial commit'
 tmpbranch = !git checkout -b "${1-tmp-}$(date -Ins | md5sum | cut -b-8)"
 tracked   = "!f() { local BRANCH=${1-$(git current)}; git rev-parse --abbrev-ref --symbolic-full-name \"$BRANCH\"@{u}; }; f"
