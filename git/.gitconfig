@@ -59,6 +59,7 @@ lastco    = checkout @{-1}
 new       = add -N
 move-file = "!f() { [ -f \"$1\" ] || mv \"$2\" \"$1\"; git mv -fk \"$1\" \"$2\"; }; f"
 prune     = !git reflog expire --expire=now --all && git gc --prune=now
+range     = "!f() { local BRANCH=${1-$(git current)}; local REMOTE=${2-\"${BRANCH}@{u}\"}; echo $(git merge-base \"$BRANCH\" \"$REMOTE\")..\"$BRANCH\"; }; f"
 refresh   = !git store && git c @{u} && git down && git c @{-1} && git rebase && git recover
 root      = rev-parse --show-toplevel
 search    = log -S
