@@ -44,11 +44,12 @@ z   = "!f() { git r $@ && git c $@; }; f"
 
 alias     = !git config --get-regexp '^alias\\.' | colrm 1 6 | sed 's/[ ]/ = /' | sort
 amend     = commit --amend --no-edit
-edit      = commit --amend --edit
-epics     = ls-remote origin refs/heads/epic/ID-*
 current   = rev-parse --abbrev-ref HEAD
+debug      = !GIT_TRACE=1 git
 discard   = !git reset --hard && git clean -df
 down      = "!f() { local BRANCH=${2-$(git current)}; local REMOTE=${1-$(git tr \"$BRANCH\")}; git pull --ff-only --no-tags \"$REMOTE\" \"$BRANCH\":\"$BRANCH\"; }; f"
+edit      = commit --amend --edit
+epics     = ls-remote origin refs/heads/epic/ID-*
 exec      = "!exec "
 fixup     = commit --fixup
 git       = !exec git
@@ -56,10 +57,10 @@ ign       = ls-files -o -i --exclude-standard
 ignore    = "!f() { [ -e .gitignore ] || touch .gitignore; echo \"$@\" >> .gitignore; }; f"
 last      = rev-parse --short HEAD
 lastco    = checkout @{-1}
-new       = add -N
 move-file = "!f() { [ -f \"$1\" ] || mv \"$2\" \"$1\"; git mv -fk \"$1\" \"$2\"; }; f"
+new       = add -N
 prune     = !git reflog expire --expire=now --all && git gc --prune=now
-range     = "!f() { local BRANCH=${1-$(git current)}; local REMOTE=${2-\"${BRANCH}@{u}\"}; echo $(git merge-base \"$BRANCH\" \"$REMOTE\")..\"$BRANCH\"; }; f"
+range     = "!f() { local BRANCH=\"${1:-$(git current)}\"; local REMOTE=\"${BRANCH}\"\"@{u}\"; local REMOTE=${2-\"$REMOTE\"}; echo $(git merge-base \"$BRANCH\" \"$REMOTE\" | git name-rev --name-only --stdin)..\"$BRANCH\"; }; f"
 refresh   = !git store && git c @{u} && git down && git c @{-1} && git rebase && git recover
 root      = rev-parse --show-toplevel
 search    = log -S
