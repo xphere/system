@@ -45,7 +45,7 @@ z   = "!f() { git r $@ && git c $@; }; f"
 alias     = !git config --get-regexp '^alias\\.' | colrm 1 6 | sed 's/[ ]/ = /' | sort
 amend     = commit --amend --no-edit
 current   = rev-parse --abbrev-ref HEAD
-debug      = !GIT_TRACE=1 git
+debug     = !GIT_TRACE=1 git
 discard   = !git reset --hard && git clean -df
 down      = "!f() { local BRANCH=${2-$(git current)}; local REMOTE=${1-$(git tr \"$BRANCH\")}; git pull --ff-only --no-tags \"$REMOTE\" \"$BRANCH\":\"$BRANCH\"; }; f"
 edit      = commit --amend --edit
