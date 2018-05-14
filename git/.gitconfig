@@ -63,12 +63,12 @@ prune     = !git reflog expire --expire=now --all && git gc --prune=now
 range     = "!f() { local BRANCH=\"${1:-$(git current)}\"; local REMOTE=\"${BRANCH}\"\"@{u}\"; local REMOTE=${2-\"$REMOTE\"}; echo $(git merge-base \"$BRANCH\" \"$REMOTE\" | git name-rev --name-only --stdin)..\"$BRANCH\"; }; f"
 refresh   = !git store && git c @{u} && git down && git c @{-1} && git rebase && git recover
 rev       = rev-parse HEAD
-recover   = "!f() { local REV=$(git rev); [ \"$(git commit-message)\" = ::modified ] && git reset -q HEAD~; [ \"$(git commit-message)\" = ::indexed ] && git reset -q --soft HEAD~; [ $(git rev) != $REV ] && echo 'Current state recovered'; }; f"
+recover   = "!f() { local REV=$(git rev); [ \"$(git commit-message)\" = ::modified ] && git reset -q HEAD~; [ \"$(git commit-message)\" = ::indexed ] && git reset -q --soft HEAD~; [ $(git rev) = $REV ] || echo 'Current state recovered'; }; f"
 root      = rev-parse --show-toplevel
 search    = log -S
 stale     = "!f() { for BRANCH in $(git unmerged); do (git rev-parse --verify --quiet \"$BRANCH\"@{u} > /dev/null 2>&1 && git merge-base --is-ancestor \"$BRANCH\"@{u} \"$BRANCH\") || echo \"$BRANCH\"; done }; f"
 start     = !git init . && git commit --allow-empty -m 'Initial commit'
-store     = "!f() { local REV=\"$(git rev)\"; if ! git index-is-clean; then git unsafe-commit '::indexed'; fi; if ! git working-is-clean; then git add -A && git unsafe-commit '::modified'; fi; if [ \"$(git rev)\" != \"$REV\" ]; then echo 'Current state stored'; fi; }; f"
+store     = "!f() { local REV=\"$(git rev)\"; git index-is-clean || git unsafe-commit '::indexed'; git working-is-clean || $(git add -A && git unsafe-commit '::modified'); [ \"$(git rev)\" = \"$REV\" ] || echo 'Current state stored'; }; f"
 tmpbranch = !git checkout -b "${1-tmp-}$(date -Ins | md5sum | cut -b-8)"
 tracked   = "!f() { local BRANCH=${1-$(git current)}; git rev-parse --abbrev-ref --symbolic-full-name \"$BRANCH\"@{u}; }; f"
 unchanged = update-index --assume-unchanged
@@ -77,7 +77,7 @@ unmerged  = "!f() { git bl | xargs git merge-base --independent ${1:-} | xargs g
 commit-message = show -s --format="%s"
 index-is-clean = !git diff-index --cached --quiet HEAD
 unsafe-commit = !git commit --no-verify -q -m
-working-is-clean = !git diff-files --quiet && [ -z "$(git ls-files --exclude-standard --others)" ]
+working-is-clean = !git diff-files --quiet && [ -z \"$(git ls-files --exclude-standard --others)\" ]
 
 [branch]
 autosetupmerge = always
