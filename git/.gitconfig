@@ -111,8 +111,9 @@ safecrlf = true
 whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
 
 [diff]
-algorithm = myers
+algorithm = histogram
 mnemonicprefix = true
+indentheuristic = true
 
 [http] 
 postBuffer = 524288000 
